@@ -25,7 +25,7 @@ The attacker only listens to the network traffic and captures the username and p
 ---
 =======================================================
 # Task 3.2 - Authentication Design 
-=======================================================\
+=======================================================
 
 ## a. Two-Factor Authentication (2FA) Proposal
 
@@ -77,7 +77,7 @@ In the SARS system:
 # Task - 3.3 -RSA Cryptography
 ================================================
 
-# a. Key Generation
+### a. Key Generation
 
 S1:
 
@@ -93,7 +93,7 @@ We need 1 < e < 40 with gcd(e, 40) = 1.
 Try e = 3. Check gcd(3, 40) using the Euclidean algorithm:
 40 = 13 × 3 + 1
 3  = 3 × 1  + 0  
-gcd(3, 40) = 1   ✓ (coprime — e = 3 is valid)
+gcd(3, 40) = 1  
 
 S4:
 
@@ -102,7 +102,7 @@ Using the Extended Euclidean Algorithm on the division above:
 1 = 40 × 1 + 3 × (−13)
 So −13 × 3 ≡ 1 (mod 40), which means d ≡ −13 (mod 40).
 d = −13 + 40 = 27
-Verification: d × e mod 40 = 27 × 3 mod 40 = 81 mod 40 = 1 ✓
+Verification: d × e mod 40 = 27 × 3 mod 40 = 81 mod 40 = 1 
 
 Result:
 
@@ -110,15 +110,15 @@ Public key  (e, n) = (3, 55)
 
 Private key (d, n) = (27, 55)
 
-# b. Encryption
+### b. Encryption
 
-when m = 3. Compute c = m^e mod n = 3^3 mod 55.\
+when m = 3. Compute c = m^e mod n = 3^3 mod 55.
 3^3 = 3 × 3 × 3 = 27
 27 mod 55 = 27      (27 < 55, so no reduction needed)
 
 **c = 27**
 
-# C. Decryption
+### C. Decryption
 
 Compute m = c^d mod n = 27^27 mod 55, using square-and-multiply (repeated squaring) since computing 27^27 directly is impractical.
 
@@ -155,7 +155,7 @@ Step 3 — Multiply the pieces together mod 55, one step at a time:
 
 Verification: The decrypted value m = 3 matches the original 
 
-# d. Why RSA Security Relies on the Difficulty of Factoring n
+### d. Why RSA Security Relies on the Difficulty of Factoring n
 
 The Core Dependency: Deriving the private exponent $d$ requires $\phi(n)$, which can only be calculated if the prime factors $p$ and $q$ of $n$ are known.The Security Mechanism: While factoring a small toy number like $n = 55$ is trivial, factoring a product of two several-hundred-digit primes is computationally impossible for classical algorithms in a feasible timeframe.The Conclusion: Because an attacker cannot practically factor $n$ at scale, they cannot compute $\phi(n)$ or the modular inverse $d$, preventing the public key $(e, n)$ from leaking the private key.
 
@@ -165,7 +165,7 @@ The Core Dependency: Deriving the private exponent $d$ requires $\phi(n)$, which
 
 ( Use the following public parameters: prime p = 23, primitive root α = 5 )
 
-# a. Alice's Public Value
+### a. Alice's Public Value
 
 a = 6. Compute A = α^a mod p = 5^6 mod 23.
 
@@ -185,7 +185,7 @@ Build up powers of 5 mod 23 step by step:
 
 A = 8
 
-# b. Bob's Public Value
+### b. Bob's Public Value
 
 b = 15. Compute B = α^b mod p = 5^15 mod 23,
 
@@ -195,7 +195,7 @@ b = 15. Compute B = α^b mod p = 5^15 mod 23,
 
 Multiply step by step, reducing mod 23 as we go:
 
-# c. Shared Secret Key — Computed Both Ways\
+### c. Shared Secret Key — Computed Both Ways\
 
 From Alice's perspective: K = B^a mod p = 19^6 mod 23
 
@@ -243,7 +243,7 @@ Verification: K (Alice) = 2 = K (Bob).
 
 ***B = 19***
 
-# d. Why the Attacker Can't Compute K, and the Vulnerability Without Authentication
+### d. Why the Attacker Can't Compute K, and the Vulnerability Without Authentication
 
 The Math (Discrete Logarithm Problem): Intercepting public parameters ($p=23, \alpha=5, A=8, B=19$) is useless without the private exponents ($a$ or $b$). Reversing modular exponentiation to find a private key requires solving the discrete logarithm problem; while trivial to brute-force in toy examples, it is computationally impossible for classical algorithms at real-world scales.The Vulnerability (MITM Attack): Without authentication, Diffie-Hellman cannot verify identity. An attacker on the network can execute a Man-in-the-Middle (MITM) attack by intercepting and replacing public values to establish separate shared secrets with Alice and Bob. This lets the attacker transparently decrypt and re-encrypt passing traffic without needing to crack the math.
 
@@ -251,7 +251,7 @@ The Math (Discrete Logarithm Problem): Intercepting public parameters ($p=23, \a
 # Task 3.5 — TLS, Firewalls, and OS Hardening 
 ===================================================
 
-# a. The TLS Handshake (Four Main Steps)
+### a. The TLS Handshake (Four Main Steps)
 
 Step 1 — ClientHello: The browser sends its supported TLS versions, a list of compatible cipher suites, a "client random" number, and a key-share proposal. No secret data is exposed.
 
@@ -261,13 +261,13 @@ Step 3 — Verification & Key Derivation: The browser validates the server's cer
 
 Step 4 — Finished Messages: Both parties exchange an encrypted "Finished" message to verify that the entire handshake was received intact and that the keys match.
 
-# b. Firewall vs. IDS
+### b. Firewall vs. IDS
 
 Attack the Firewall Prevents: By restricting incoming traffic to ports 80 and 443, the firewall blocks direct internet-facing connection attempts to unexposed services—such as an attacker trying to brute-force SSH (port 22) or exploit a database port (e.g., 5432/3306). It drops this traffic before it ever reaches the server.
 
 Attack the IDS Detects (Firewall Misses): A SQL injection attack (e.g., ' OR '1'='1) sent inside a legitimate HTTPS request to port 443. Because the firewall only filters traffic by IP and port, it cannot inspect application-layer payloads. An IDS performs deep packet inspection to recognize the malicious SQL pattern and alert on the threat.
 
-# c. OS Hardening Steps for the New Linux Server
+### c. OS Hardening Steps for the New Linux Server
 
 | Step | Security Measure | Description |
 |------|------------------|-------------|
