@@ -1,0 +1,18 @@
+# Task 3.1 – CIA Triad and Attack Classification
+
+## a. CIA Triad Analysis and Attack Type
+
+| Event | CIA Property Violated | Attack Type | Reason |
+|--------|-----------------------|-------------|--------|
+| Student logs in using plain HTTP and the attacker captures the username and password. | **Confidentiality** | **Passive Attack** | The attacker secretly intercepts sensitive login information without changing any data. |
+| The attacker replays the captured session token to access the student portal. | **Confidentiality** | **Replay Attack** | The attacker reuses a valid session token to gain unauthorized access to the student's account. |
+| The attacker modifies a student's marks in the database. | **Integrity** | **Active Attack** | The attacker changes stored data, affecting its correctness and trustworthiness. |
+
+---
+
+## b. Passive or Active Attack
+
+The attacker's credential capture is a **Passive Attack**.
+
+**Justification:**  
+The attacker only listens to the network traffic and captures the username and password without modifying, deleting, or interrupting any communication. Since the attacker only observes the data transmission, it is classified as a passive attack.
